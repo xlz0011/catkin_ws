@@ -1,0 +1,2 @@
+random_walk
+-DCATKIN_DEVEL_PREFIX=/home/xl/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/xl/catkin_ws/install -G Unix Makefiles
