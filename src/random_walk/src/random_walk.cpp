@@ -34,7 +34,7 @@ class RandomWalk {
 		trajectory.header.frame_id = "odom";
 		// Subscribe to the simulated robot's laser scan topic and tell ROS to call
 		// this->commandCallback() whenever a new message is published on that topic
-		laserSub = nh.subscribe("base_scan", 1, &RandomWalk::commandCallback, this);
+		laserSub = nh.subscribe("/scan", 1, &RandomWalk::commandCallback, this);
 	};
 
 	// Send a velocity command
