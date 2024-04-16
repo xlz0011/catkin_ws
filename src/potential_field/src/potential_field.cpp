@@ -50,12 +50,12 @@ public:
         // velocity command topic (the second argument indicates that
         // if multiple command messages are in the queue to be sent,
         // only the last command will be sent)
-        commandPub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
+        commandPub = nh.advertise<geometry_msgs::Twist>("/cmd_vel_mux/input/navi", 1);
 
         // Subscribe to the current simulated robot's laser scan topic and
         // tell ROS to call this->laserCallback() whenever a new message
         // is published on that topic
-        laserSub = nh.subscribe("base_scan", 1, &PotFieldBot::laserCallback, this);
+        laserSub = nh.subscribe("/scan", 1, &PotFieldBot::laserCallback, this);
 	poseSub = nh.subscribe<nav_msgs::Odometry>("base_pose_ground_truth", 10, &PotFieldBot::poseCallback, this);
        // poseSub = nh.subscribe("base_pose_ground_truth", 1, &PotFieldBot::poseCallback, this);
 
