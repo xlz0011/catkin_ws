@@ -255,20 +255,20 @@ public:
     double prevY = 0;
     double RandomForce = 1;  
    // double staying_near_same_place_counter = 0;  
-    static constexpr double MIN_SCAN_ANGLE_RAD = -30.0 / 180 * M_PI;
-    static constexpr double MAX_SCAN_ANGLE_RAD = 30.0 / 180 * M_PI;
-    static constexpr double PROXIMITY_RANGE_M = 1;
+    static const double MIN_SCAN_ANGLE_RAD = -30.0 / 180 * M_PI;
+    static const double MAX_SCAN_ANGLE_RAD = 30.0 / 180 * M_PI;
+    static const double PROXIMITY_RANGE_M = 1;
 
     // Only care about obstacles that is in a range of 4 meters
-    static constexpr double BETA = 4.0;
-    static constexpr double EPSILON = 0.05;
-    static constexpr double GAMMA = 2.5;
-    static constexpr double KAPPA = 0.3;
-    static constexpr double ALPHA = 1;
-    static constexpr double ANGLE_EPSILON = 0.1;
-    static constexpr double RandomForceFactor = 2;
-    static constexpr double STAYING_NEAR_SAME_PLACE_THRESHOLD = 0.05; 
-    static constexpr int STAYING_NEAR_SAME_PLACE_DURATION = 3; 
+    static const double BETA = 4.0;
+    static const double EPSILON = 0.05;
+    static const double GAMMA = 2.5;
+    static const double KAPPA = 0.3;
+    static const double ALPHA = 1;
+    static const double ANGLE_EPSILON = 0.1;
+    static const double RandomForceFactor = 2;
+    static const double STAYING_NEAR_SAME_PLACE_THRESHOLD = 0.05; 
+    static const int STAYING_NEAR_SAME_PLACE_DURATION = 3; 
 
 protected:
     ros::Publisher commandPub; // Publisher to the current robot's velocity command topic
