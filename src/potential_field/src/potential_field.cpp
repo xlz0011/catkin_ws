@@ -166,10 +166,22 @@ public:
 
         unsigned int minIndex = ceil((MIN_SCAN_ANGLE_RAD - msg->angle_min) / msg->angle_increment);
         unsigned int maxIndex = ceil((MAX_SCAN_ANGLE_RAD - msg->angle_min) / msg->angle_increment);
+//unsigned int minIndex = ceil((MIN_SCAN_ANGLE_RAD -msg->angle_min) / msg->angle_increment);
+//                      unsigned int maxIndex = ceil((MAX_SCAN_ANGLE_RAD -msg->angle_min) / msg->angle_increment);
+        float closestRange = msg->ranges[minIndex];
+        float currAngle;
+        for (unsigned int currIndex = minIndex + 1; currIndex < maxIndex; currIndex++) {
+        currAngle = msg->angle_min + msg->angle_increment*currIndex;
+                if (msg->ranges[currIndex] <closestRange) {
+                        if (currAngle <= msg->angle_max)
+                                {closestRange = msg->ranges[currIndex];}
+                                }
+                        }
+        ROS_INFO_STREAM("Range: " << closestRange);
 
+        double forceX = 0;//AttractiveForceX(goalX, goalY);
+        double forceY = 0;//AttractiveForceY(goalX, goalY);
 
-        double forceX = AttractiveForceX(goalX, goalY);
-        double forceY = AttractiveForceY(goalX, goalY);
         
 
         for (unsigned int currIndex = minIndex + 1; currIndex < maxIndex; currIndex++)
@@ -220,7 +232,16 @@ public:
             ForceAngle = 2 * M_PI + ForceAngle;
         }
 
-        rotate_speed_radps = KAPPA * ForceAngle;
+        //rotate_speed_radps = KAPPA * ForceAngle;
+        ROS_INFO_STREAM("ForceAngle: "<< ForceAngle);
+        if (abs(ForceAngle) < 3)
+                {
+        rotate_speed_radps = 0.05 * ForceAngle;}
+//      rotate_speed_radps = KAPPA * ForceAngle;}
+        else
+        {
+        forward_speed_mps=0.08;
+        rotate_speed_radps = 0.05 * ForceAngle;}
 
 
     }
@@ -234,10 +255,8 @@ public:
 
         while (ros::ok())
         {
-            if (!achieve_goal())
-            {
-                move(forward_speed_mps, rotate_speed_radps);
-            }
+            move(forward_speed_mps, rotate_speed_radps);
+
 
             ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
             rate.sleep();    // Sleep for the rest of the cycle, to enforce the FSM loop rate
@@ -245,37 +264,37 @@ public:
     };
 
     // Tunable motion controller parameters
-    double forward_speed_mps = 0.5;
-    double rotate_speed_radps = M_PI / 4;
+    double forward_speed_mps = 0.15;
+    double rotate_speed_radps = M_PI / 12;
     int staying_near_same_place_counter = 0;
     double random_force_x = 0.0;
     double random_force_y = 0.0;
-        
+
     double prevX = 0;
     double prevY = 0;
-    double RandomForce = 1;  
+    double RandomForce = 1;
    // double staying_near_same_place_counter = 0;  
     static const double MIN_SCAN_ANGLE_RAD = -30.0 / 180 * M_PI;
     static const double MAX_SCAN_ANGLE_RAD = 30.0 / 180 * M_PI;
-    static const double PROXIMITY_RANGE_M = 1;
+    static const double PROXIMITY_RANGE_M = 0.2;
 
     // Only care about obstacles that is in a range of 4 meters
     static const double BETA = 4.0;
     static const double EPSILON = 0.05;
     static const double GAMMA = 2.5;
-    static const double KAPPA = 0.3;
+    static const double KAPPA = 0.1;
     static const double ALPHA = 1;
     static const double ANGLE_EPSILON = 0.1;
     static const double RandomForceFactor = 2;
-    static const double STAYING_NEAR_SAME_PLACE_THRESHOLD = 0.05; 
-    static const int STAYING_NEAR_SAME_PLACE_DURATION = 3; 
-
+    static const double STAYING_NEAR_SAME_PLACE_THRESHOLD = 0.05;
+    static const int STAYING_NEAR_SAME_PLACE_DURATION = 3;
 protected:
     ros::Publisher commandPub; // Publisher to the current robot's velocity command topic
     ros::Subscriber laserSub;  // Subscriber to the current robot's laser scan topic
     ros::Subscriber poseSub;   // Subscriber to current robots' pose topic
  //   std::vector<ros::Subscriber> poseSub; // List of subscribers to all robots' pose topics
  //   std::vector<Pose> pose; // List of pose objects for all robots
+    ros::Subscriber odomSub;
     double x;
     double y;
     double heading;
